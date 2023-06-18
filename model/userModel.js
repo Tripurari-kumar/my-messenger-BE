@@ -27,6 +27,14 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: '',
   },
+  dateOfBirth: {
+    type: String,
+    default: Date.toString(),
+  },
+  about: {
+    type: String,
+    default: '',
+  },
 });
 
 module.exports = mongoose.model('Users', userSchema);
