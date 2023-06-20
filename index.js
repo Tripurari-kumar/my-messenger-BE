@@ -42,12 +42,12 @@ const server = app.listen(process.env.PORT, () => {
 
 const io = socket(server, {
   cors: {
-    origin: 'http://localhost:4000',
+    origin: '*',
     credentials: true,
   },
 });
 
-global.onlineUsers = new Map();
+const onlineUsers = new Map();
 io.on('connection', (socket) => {
   global.chatSocket = socket;
   socket.on('add-user', (userId) => {
@@ -56,8 +56,9 @@ io.on('connection', (socket) => {
 
   socket.on('send-msg', (data) => {
     const sendUserSocket = onlineUsers.get(data.to);
+    //console.log('sent', data, onlineUsers.keys(), sendUserSocket);
     if (sendUserSocket) {
-      socket.to(sendUserSocket).emit('msg-recieve', data.msg);
+      socket.to(sendUserSocket).emit('msg-recieve', data.message);
     }
   });
 });
