@@ -40,3 +40,42 @@ module.exports.getAllMessage = async (req, res, next) => {
     next(err);
   }
 };
+
+module.exports.allLastTextMessages = async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+    const map1 = new Map();
+    const lastTextArray = [];
+    const allMessages = await Messages.find({})
+      .select(['users', 'sentTime', 'message'])
+      .sort({ updatedAt: 1 });
+    const filteredSelfMessages = allMessages?.filter((item) =>
+      item?.users?.includes(userId)
+    );
+
+    filteredSelfMessages.forEach((item) => {
+      map1.set(item?.users?.sort()?.[0], {
+        sentTime: item?.sentTime,
+        message: item?.message?.text,
+      });
+      map1.set(item?.users?.sort()?.[1], {
+        sentTime: item?.sentTime,
+        message: item?.message?.text,
+      });
+    });
+    for (let [key, value] of map1) {
+      lastTextArray.push({
+        id: key,
+        ...value,
+      });
+    }
+
+    let reqArray = lastTextArray.sort((m1, m2) =>
+      m1?.sentTime < m2.sentTime ? 1 : m1.sentTime > m2.sentTime ? -1 : 0
+    );
+
+    res.json(reqArray);
+  } catch (err) {
+    next(err);
+  }
+};
