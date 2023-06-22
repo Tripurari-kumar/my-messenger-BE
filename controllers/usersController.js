@@ -61,7 +61,7 @@ module.exports.setProfile = async (req, res, next) => {
     const dateOfBirth = req.body.dateOfBirth;
     await User.findByIdAndUpdate(userId, {
       userId,
-      isAvatarImageSet: true,
+      isAvatarImageSet: avatarImage ? true : false,
       avatarImage,
       dateOfBirth,
       about,
