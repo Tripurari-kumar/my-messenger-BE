@@ -70,9 +70,7 @@ module.exports.allLastTextMessages = async (req, res, next) => {
       });
     }
 
-    let reqArray = lastTextArray.sort((m1, m2) =>
-      m1?.sentTime < m2.sentTime ? 1 : m1.sentTime > m2.sentTime ? -1 : 0
-    );
+    let reqArray = lastTextArray.sort((m1, m2) =>Math.floor(new Date(m1?.updatedAt) / 1000)  - Math.floor(new Date(m2?.updatedAt) / 1000));
 
     res.json(reqArray);
   } catch (err) {
